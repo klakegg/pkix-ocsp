@@ -4,8 +4,6 @@ import net.klakegg.pkix.ocsp.builder.BuildHandler;
 import net.klakegg.pkix.ocsp.builder.Builder;
 import net.klakegg.pkix.ocsp.builder.Properties;
 import net.klakegg.pkix.ocsp.builder.Property;
-import org.bouncycastle.cert.ocsp.OCSPReq;
-import org.bouncycastle.cert.ocsp.OCSPResp;
 
 import java.net.URI;
 import java.security.cert.X509Certificate;
@@ -57,13 +55,16 @@ public class OcspClient extends AbstractOcspClient {
                 return new CertificateResult(CertificateStatus.UNKNOWN);
         }
 
-        OCSPReq request = generateRequest(issuer, certificate);
+        OcspRequest request = new OcspRequest();
+        request.setIssuer(issuer, properties.get(DIGEST_ALGORITHM), properties.get(DIGEST_OBJECT_IDENTIFIER));
+        request.setCertificates(certificate);
+        if (properties.get(NONCE))
+            request.addNonce();
 
-        OCSPResp response = fetch(request, uri);
+        OcspResponse response = fetch(request, uri);
+        response.verifyResponse();
 
-        verifyResponse(response);
-
-        CertificateResult certificateResult = parseResponseObject(response).get(certificate);
+        CertificateResult certificateResult = response.getResult().get(certificate);
 
         switch (certificateResult.getStatus()) {
             case REVOKED:

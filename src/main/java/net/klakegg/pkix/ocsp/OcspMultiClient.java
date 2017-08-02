@@ -3,8 +3,6 @@ package net.klakegg.pkix.ocsp;
 import net.klakegg.pkix.ocsp.builder.BuildHandler;
 import net.klakegg.pkix.ocsp.builder.Builder;
 import net.klakegg.pkix.ocsp.builder.Properties;
-import org.bouncycastle.cert.ocsp.OCSPReq;
-import org.bouncycastle.cert.ocsp.OCSPResp;
 
 import java.math.BigInteger;
 import java.net.URI;
@@ -56,12 +54,15 @@ public class OcspMultiClient extends AbstractOcspClient {
                 return OcspResult.empty();
         }
 
-        OCSPReq request = generateRequest(issuer, certificates);
+        OcspRequest request = new OcspRequest();
+        request.setIssuer(issuer, properties.get(DIGEST_ALGORITHM), properties.get(DIGEST_OBJECT_IDENTIFIER));
+        request.setCertificates(certificates);
+        if (properties.get(NONCE))
+            request.addNonce();
 
-        OCSPResp response = fetch(request, uri);
+        OcspResponse response = fetch(request, uri);
+        response.verifyResponse();
 
-        verifyResponse(response);
-
-        return parseResponseObject(response);
+        return response.getResult();
     }
 }

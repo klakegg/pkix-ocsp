@@ -5,7 +5,6 @@ import net.klakegg.pkix.ocsp.api.OcspFetcherResponse;
 import net.klakegg.pkix.ocsp.builder.BuildHandler;
 import net.klakegg.pkix.ocsp.builder.Builder;
 import net.klakegg.pkix.ocsp.builder.Properties;
-import net.klakegg.pkix.ocsp.builder.Property;
 
 import java.io.IOException;
 import java.io.InputStream;
