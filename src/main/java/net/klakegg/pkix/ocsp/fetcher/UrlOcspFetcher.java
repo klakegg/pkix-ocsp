@@ -2,6 +2,10 @@ package net.klakegg.pkix.ocsp.fetcher;
 
 import net.klakegg.pkix.ocsp.api.OcspFetcher;
 import net.klakegg.pkix.ocsp.api.OcspFetcherResponse;
+import net.klakegg.pkix.ocsp.builder.BuildHandler;
+import net.klakegg.pkix.ocsp.builder.Builder;
+import net.klakegg.pkix.ocsp.builder.Properties;
+import net.klakegg.pkix.ocsp.builder.Property;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,13 +16,31 @@ import java.net.URI;
 /**
  * @author erlend
  */
-public class UrlOcspFetcher implements OcspFetcher {
+public class UrlOcspFetcher extends AbstractOcspFetcher {
+
+    /**
+     * Builder to create an instance of OcspFetcher using HttpURLConnection for connectivity.
+     *
+     * @return Prepared fetcher.
+     */
+    public static Builder<OcspFetcher> builder() {
+        return new Builder<>(new BuildHandler<OcspFetcher>() {
+            @Override
+            public OcspFetcher build(Properties properties) {
+                return new UrlOcspFetcher(properties);
+            }
+        });
+    }
+
+    public UrlOcspFetcher(Properties properties) {
+        super(properties);
+    }
 
     @Override
     public OcspFetcherResponse fetch(URI uri, byte[] content) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-        connection.setConnectTimeout(15000);
-        connection.setReadTimeout(15000);
+        connection.setConnectTimeout(properties.get(TIMEOUT_CONNECT));
+        connection.setReadTimeout(properties.get(TIMEOUT_READ));
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/ocsp-request");

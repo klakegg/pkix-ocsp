@@ -5,6 +5,6 @@ package net.klakegg.pkix.ocsp.builder;
  */
 public interface BuildHandler<T> {
 
-    T perform(Properties properties);
+    T build(Properties properties);
 
 }

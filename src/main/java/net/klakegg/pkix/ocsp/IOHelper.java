@@ -9,12 +9,12 @@ import java.io.InputStream;
  */
 class IOHelper {
 
-    public static byte[] toByteArray(InputStream inputStreamn) throws IOException {
+    public static byte[] toByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         byte[] buf = new byte[8192];
         int r;
-        while ((r = inputStreamn.read(buf)) != -1) {
+        while ((r = inputStream.read(buf)) != -1) {
             outputStream.write(buf, 0, r);
         }
 

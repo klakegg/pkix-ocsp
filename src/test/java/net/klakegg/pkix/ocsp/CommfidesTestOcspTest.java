@@ -27,9 +27,9 @@ public class CommfidesTestOcspTest {
                 .set(OcspClient.EXCEPTION_ON_UNKNOWN, false)
                 .build();
 
-        OcspResponse response = ocspClient.verify(subjectUnknown, issuer);
+        CertificateResult response = ocspClient.verify(subjectUnknown, issuer);
 
-        Assert.assertEquals(response.getStatus(), OcspStatus.UNKNOWN);
+        Assert.assertEquals(response.getStatus(), CertificateStatus.UNKNOWN);
         Assert.assertNotNull(response.getThisUpdate());
         Assert.assertNull(response.getNextUpdate());
     }
@@ -40,9 +40,9 @@ public class CommfidesTestOcspTest {
         OcspClient ocspClient = OcspClient.builder()
                 .build();
 
-        OcspResponse response = ocspClient.verify(subjectValid, issuer);
+        CertificateResult response = ocspClient.verify(subjectValid, issuer);
 
-        Assert.assertEquals(response.getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(response.getStatus(), CertificateStatus.GOOD);
         Assert.assertNotNull(response.getThisUpdate());
         Assert.assertNull(response.getNextUpdate());
 

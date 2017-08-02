@@ -26,8 +26,8 @@ public class PeppolProdOcspTest {
         OcspClient ocspClient = OcspClient.builder()
                 .build();
 
-        Assert.assertEquals(ocspClient.verify(subjectValid01, issuer).getStatus(), OcspStatus.GOOD);
-        Assert.assertEquals(ocspClient.verify(subjectValid02, issuer).getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(ocspClient.verify(subjectValid01, issuer).getStatus(), CertificateStatus.GOOD);
+        Assert.assertEquals(ocspClient.verify(subjectValid02, issuer).getStatus(), CertificateStatus.GOOD);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class PeppolProdOcspTest {
                 .set(OcspClient.INTERMEDIATES, Collections.singletonList(issuer))
                 .build();
 
-        Assert.assertEquals(ocspClient.verify(subjectValid01).getStatus(), OcspStatus.GOOD);
-        Assert.assertEquals(ocspClient.verify(subjectValid02).getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(ocspClient.verify(subjectValid01).getStatus(), CertificateStatus.GOOD);
+        Assert.assertEquals(ocspClient.verify(subjectValid02).getStatus(), CertificateStatus.GOOD);
     }
 }

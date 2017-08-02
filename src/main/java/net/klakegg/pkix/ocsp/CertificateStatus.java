@@ -5,7 +5,7 @@ package net.klakegg.pkix.ocsp;
  *
  * @author erlend
  */
-public enum OcspStatus {
+public enum CertificateStatus {
 
     /**
      * The certificate is valid.
@@ -17,6 +17,9 @@ public enum OcspStatus {
      */
     REVOKED,
 
+    /**
+     * Status of certificate is unknown.
+     */
     UNKNOWN
 
 }

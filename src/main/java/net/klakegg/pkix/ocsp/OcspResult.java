@@ -10,21 +10,21 @@ import java.util.Map;
  */
 public class OcspResult {
 
-    private final Map<BigInteger, OcspResponse> map;
+    private final Map<BigInteger, CertificateResult> map;
 
     protected static OcspResult empty() {
-        return new OcspResult(Collections.<BigInteger, OcspResponse>emptyMap());
+        return new OcspResult(Collections.<BigInteger, CertificateResult>emptyMap());
     }
 
-    protected OcspResult(Map<BigInteger, OcspResponse> map) {
+    protected OcspResult(Map<BigInteger, CertificateResult> map) {
         this.map = Collections.unmodifiableMap(map);
     }
 
-    public OcspResponse get(BigInteger serialNumber) {
+    public CertificateResult get(BigInteger serialNumber) {
         return map.get(serialNumber);
     }
 
-    public OcspResponse get(X509Certificate certificate) {
+    public CertificateResult get(X509Certificate certificate) {
         return get(certificate.getSerialNumber());
     }
 }

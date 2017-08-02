@@ -31,7 +31,7 @@ public class CommfidesTestMultiOcspTest {
                 subjectUnknown, subjectValid
         );
 
-        Assert.assertEquals(ocspResult.get(subjectUnknown).getStatus(), OcspStatus.UNKNOWN);
-        Assert.assertEquals(ocspResult.get(subjectValid).getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(ocspResult.get(subjectUnknown).getStatus(), CertificateStatus.UNKNOWN);
+        Assert.assertEquals(ocspResult.get(subjectValid).getStatus(), CertificateStatus.GOOD);
     }
 }

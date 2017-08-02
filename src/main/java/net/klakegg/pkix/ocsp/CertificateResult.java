@@ -5,25 +5,25 @@ import java.util.Date;
 /**
  * @author erlend
  */
-public class OcspResponse {
+public class CertificateResult {
 
-    private OcspStatus status;
+    private CertificateStatus status;
 
     private Date thisUpdate;
 
     private Date nextUpdate;
 
-    protected OcspResponse(OcspStatus ocspStatus, Date thisUpdate, Date nextUpdate) {
-        this(ocspStatus);
+    protected CertificateResult(CertificateStatus certificateStatus, Date thisUpdate, Date nextUpdate) {
+        this(certificateStatus);
         this.thisUpdate = thisUpdate;
         this.nextUpdate = nextUpdate;
     }
 
-    protected OcspResponse(OcspStatus status) {
+    protected CertificateResult(CertificateStatus status) {
         this.status = status;
     }
 
-    public OcspStatus getStatus() {
+    public CertificateStatus getStatus() {
         return status;
     }
 
@@ -37,7 +37,7 @@ public class OcspResponse {
 
     @Override
     public String toString() {
-        return "OcspResponse{" +
+        return "CertificateResult{" +
                 "status=" + status +
                 ", thisUpdate=" + thisUpdate +
                 ", nextUpdate=" + nextUpdate +

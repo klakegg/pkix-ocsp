@@ -29,7 +29,7 @@ public class OcspClient extends AbstractOcspClient {
     public static Builder<OcspClient> builder() {
         return new Builder<>(new BuildHandler<OcspClient>() {
             @Override
-            public OcspClient perform(Properties properties) {
+            public OcspClient build(Properties properties) {
                 return new OcspClient(properties);
             }
         });
@@ -42,11 +42,11 @@ public class OcspClient extends AbstractOcspClient {
         super(properties);
     }
 
-    public OcspResponse verify(X509Certificate certificate) throws OcspException {
+    public CertificateResult verify(X509Certificate certificate) throws OcspException {
         return verify(certificate, findIntermediate(certificate));
     }
 
-    public OcspResponse verify(X509Certificate certificate, X509Certificate issuer) throws OcspException {
+    public CertificateResult verify(X509Certificate certificate, X509Certificate issuer) throws OcspException {
         URI uri = properties.get(OVERRIDE_URL);
 
         if (uri == null) {
@@ -54,7 +54,7 @@ public class OcspClient extends AbstractOcspClient {
 
             // In case no URI was detected.
             if (uri == null)
-                return new OcspResponse(OcspStatus.UNKNOWN);
+                return new CertificateResult(CertificateStatus.UNKNOWN);
         }
 
         OCSPReq request = generateRequest(issuer, certificate);
@@ -63,9 +63,9 @@ public class OcspClient extends AbstractOcspClient {
 
         verifyResponse(response);
 
-        OcspResponse ocspResponse = parseResponseObject(response).get(certificate);
+        CertificateResult certificateResult = parseResponseObject(response).get(certificate);
 
-        switch (ocspResponse.getStatus()) {
+        switch (certificateResult.getStatus()) {
             case REVOKED:
                 OcspException.trigger(properties.get(EXCEPTION_ON_REVOKED), "Certificate is revoked.");
                 break;
@@ -75,6 +75,6 @@ public class OcspClient extends AbstractOcspClient {
                 break;
         }
 
-        return ocspResponse;
+        return certificateResult;
     }
 }

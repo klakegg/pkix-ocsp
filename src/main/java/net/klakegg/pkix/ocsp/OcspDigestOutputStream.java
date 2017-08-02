@@ -2,7 +2,6 @@ package net.klakegg.pkix.ocsp;
 
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.operator.DigestCalculator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,21 +9,21 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Lightweight implementation of DigestCalculator with implementation of DigestOutputStream in one class.
+ * Lightweight implementation of digest calculation simply extending OutputStream.
  *
  * @author erlend
  */
-class OcspDigestCalculator extends OutputStream implements DigestCalculator {
+class OcspDigestOutputStream extends OutputStream {
 
     private MessageDigest messageDigest;
 
     private ASN1ObjectIdentifier objectIdentifier;
 
-    public OcspDigestCalculator(String algorithm, String objectIdentifier) {
+    public OcspDigestOutputStream(String algorithm, String objectIdentifier) {
         this(algorithm, new ASN1ObjectIdentifier(objectIdentifier));
     }
 
-    public OcspDigestCalculator(String algorithm, ASN1ObjectIdentifier objectIdentifier) {
+    public OcspDigestOutputStream(String algorithm, ASN1ObjectIdentifier objectIdentifier) {
         try {
             this.messageDigest = MessageDigest.getInstance(algorithm);
             this.objectIdentifier = objectIdentifier;
@@ -38,17 +37,15 @@ class OcspDigestCalculator extends OutputStream implements DigestCalculator {
         messageDigest.update((byte) b);
     }
 
-    @Override
     public AlgorithmIdentifier getAlgorithmIdentifier() {
         return new AlgorithmIdentifier(objectIdentifier);
     }
 
-    @Override
-    public OutputStream getOutputStream() {
-        return this;
-    }
-
-    @Override
+    /**
+     * Returns and resets the digest.
+     *
+     * @return Digest of content passed to write() since last reset.
+     */
     public byte[] getDigest() {
         return messageDigest.digest();
     }

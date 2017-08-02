@@ -22,9 +22,9 @@ public class BuypassTestOcspTest {
         OcspClient ocspClient = OcspClient.builder()
                 .build();
 
-        OcspResponse response = ocspClient.verify(subject, issuer);
+        CertificateResult response = ocspClient.verify(subject, issuer);
 
-        Assert.assertEquals(response.getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(response.getStatus(), CertificateStatus.GOOD);
         Assert.assertNotNull(response.getThisUpdate());
         Assert.assertNull(response.getNextUpdate());
     }

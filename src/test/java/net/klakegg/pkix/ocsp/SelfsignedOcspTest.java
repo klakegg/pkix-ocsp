@@ -19,7 +19,7 @@ public class SelfsignedOcspTest {
         OcspClient ocspClient = OcspClient.builder()
                 .build();
 
-        Assert.assertEquals(ocspClient.verify(subject, subject).getStatus(), OcspStatus.UNKNOWN);
+        Assert.assertEquals(ocspClient.verify(subject, subject).getStatus(), CertificateStatus.UNKNOWN);
     }
 
     @Test(expectedExceptions = OcspException.class)

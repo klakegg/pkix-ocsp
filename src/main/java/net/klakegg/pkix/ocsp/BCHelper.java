@@ -17,12 +17,10 @@ class BCHelper {
     public static final Provider PROVIDER;
 
     static {
-        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) != null) {
-            PROVIDER = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
-        } else {
-            PROVIDER = new BouncyCastleProvider();
-            Security.addProvider(PROVIDER);
-        }
+        if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null)
+            Security.addProvider(new BouncyCastleProvider());
+
+        PROVIDER = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
     }
 
     public static X509CertificateHolder convertToHolder(X509Certificate certificate)

@@ -27,7 +27,7 @@ public class OcspMultiClient extends AbstractOcspClient {
     public static Builder<OcspMultiClient> builder() {
         return new Builder<>(new BuildHandler<OcspMultiClient>() {
             @Override
-            public OcspMultiClient perform(Properties properties) {
+            public OcspMultiClient build(Properties properties) {
                 return new OcspMultiClient(properties);
             }
         });
@@ -42,7 +42,7 @@ public class OcspMultiClient extends AbstractOcspClient {
 
     public OcspResult verify(X509Certificate... certificates) throws OcspException {
         if (certificates.length == 0)
-            return new OcspResult(Collections.<BigInteger, OcspResponse>emptyMap());
+            return new OcspResult(Collections.<BigInteger, CertificateResult>emptyMap());
 
         X509Certificate issuer = findIntermediate(certificates[0]);
 

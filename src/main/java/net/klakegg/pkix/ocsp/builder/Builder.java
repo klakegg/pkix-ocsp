@@ -29,6 +29,6 @@ public class Builder<T> {
     }
 
     public T build() {
-        return buildHandler.perform(new Properties(map));
+        return buildHandler.build(new Properties(map));
     }
 }

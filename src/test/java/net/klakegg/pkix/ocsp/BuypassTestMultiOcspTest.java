@@ -1,5 +1,6 @@
 package net.klakegg.pkix.ocsp;
 
+import net.klakegg.pkix.ocsp.fetcher.ApacheOcspFetcher;
 import net.klakegg.pkix.ocsp.util.CertificateHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -25,13 +26,14 @@ public class BuypassTestMultiOcspTest {
     public void simple() throws OcspException {
         OcspMultiClient ocspMultiClient = OcspMultiClient.builder()
                 .set(OcspMultiClient.INTERMEDIATES, Collections.singletonList(issuer))
+                .set(OcspMultiClient.FETCHER, ApacheOcspFetcher.builder().build())
                 .build();
 
         OcspResult ocspResult = ocspMultiClient.verify(
                 subjectValid01, subjectValid02
         );
 
-        Assert.assertEquals(ocspResult.get(subjectValid01).getStatus(), OcspStatus.GOOD);
-        Assert.assertEquals(ocspResult.get(subjectValid02).getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(ocspResult.get(subjectValid01).getStatus(), CertificateStatus.GOOD);
+        Assert.assertEquals(ocspResult.get(subjectValid02).getStatus(), CertificateStatus.GOOD);
     }
 }

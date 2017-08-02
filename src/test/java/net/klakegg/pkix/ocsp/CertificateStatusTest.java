@@ -6,10 +6,10 @@ import org.testng.annotations.Test;
 /**
  * @author erlend
  */
-public class OcspStatusTest {
+public class CertificateStatusTest {
 
     @Test
     public void simpleValueOf() {
-        Assert.assertEquals(OcspStatus.valueOf("GOOD"), OcspStatus.GOOD);
+        Assert.assertEquals(CertificateStatus.valueOf("GOOD"), CertificateStatus.GOOD);
     }
 }

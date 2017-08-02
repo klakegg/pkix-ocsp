@@ -31,7 +31,7 @@ public class PeppolProdMultiOcspTest {
                 subjectValid01, subjectValid02
         );
 
-        Assert.assertEquals(ocspResult.get(subjectValid01).getStatus(), OcspStatus.GOOD);
+        Assert.assertEquals(ocspResult.get(subjectValid01).getStatus(), CertificateStatus.GOOD);
         Assert.assertNull(ocspResult.get(subjectValid02)); // Multi not supported
     }
 }

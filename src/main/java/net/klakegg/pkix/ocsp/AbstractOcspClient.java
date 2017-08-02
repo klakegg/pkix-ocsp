@@ -39,7 +39,7 @@ class AbstractOcspClient {
 
     public static final Property<Boolean> EXCEPTION_ON_NO_PATH = Property.create(false);
 
-    public static final Property<OcspFetcher> FETCHER = Property.create((OcspFetcher) new UrlOcspFetcher());
+    public static final Property<OcspFetcher> FETCHER = Property.create(UrlOcspFetcher.builder().build());
 
     public static final Property<List<X509Certificate>> INTERMEDIATES =
             Property.create(Collections.<X509Certificate>emptyList());
@@ -116,7 +116,7 @@ class AbstractOcspClient {
 
             // Digest calculator to be used to create values for the issuer certificate.
             // This is done once in case of multiple requests.
-            OcspDigestCalculator digestCalculator = new OcspDigestCalculator(
+            OcspDigestOutputStream digestCalculator = new OcspDigestOutputStream(
                     properties.get(DIGEST_ALGORITHM),
                     properties.get(DIGEST_OBJECT_IDENTIFIER));
 
@@ -207,10 +207,10 @@ class AbstractOcspClient {
     protected OcspResult parseBasicResponse(BasicOCSPResp response) {
         // TODO Verify signature
 
-        Map<BigInteger, OcspResponse> map = new HashMap<>();
+        Map<BigInteger, CertificateResult> map = new HashMap<>();
 
         for (SingleResp singleResponse : response.getResponses()) {
-            map.put(singleResponse.getCertID().getSerialNumber(), new OcspResponse(
+            map.put(singleResponse.getCertID().getSerialNumber(), new CertificateResult(
                     parseCertificateStatus(singleResponse.getCertStatus()),
                     singleResponse.getThisUpdate(),
                     singleResponse.getNextUpdate()
@@ -220,12 +220,12 @@ class AbstractOcspClient {
         return new OcspResult(map);
     }
 
-    protected OcspStatus parseCertificateStatus(CertificateStatus certificateStatus) {
+    protected CertificateStatus parseCertificateStatus(org.bouncycastle.cert.ocsp.CertificateStatus certificateStatus) {
         if (certificateStatus == null)
-            return OcspStatus.GOOD;
+            return CertificateStatus.GOOD;
         else if (certificateStatus instanceof RevokedStatus)
-            return OcspStatus.REVOKED;
+            return CertificateStatus.REVOKED;
         else // if (certificateStatus instanceof UnknownStatus)
-            return OcspStatus.UNKNOWN;
+            return CertificateStatus.UNKNOWN;
     }
 }
