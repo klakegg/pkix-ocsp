@@ -1,11 +1,16 @@
 package net.klakegg.pkix.ocsp;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author erlend
  */
-public class CertificateResult {
+public class CertificateResult implements Serializable {
+
+    private static final long serialVersionUID = 1058909599853490115L;
+
+    private CertificateIssuer issuer;
 
     private CertificateStatus status;
 
@@ -13,14 +18,20 @@ public class CertificateResult {
 
     private Date nextUpdate;
 
-    protected CertificateResult(CertificateStatus certificateStatus, Date thisUpdate, Date nextUpdate) {
+    protected CertificateResult(CertificateStatus certificateStatus, CertificateIssuer issuer,
+                                Date thisUpdate, Date nextUpdate) {
         this(certificateStatus);
+        this.issuer = issuer;
         this.thisUpdate = thisUpdate;
         this.nextUpdate = nextUpdate;
     }
 
-    protected CertificateResult(CertificateStatus status) {
-        this.status = status;
+    public CertificateIssuer getIssuer() {
+        return issuer;
+    }
+
+    protected CertificateResult(CertificateStatus certificateStatus) {
+        this.status = certificateStatus;
     }
 
     public CertificateStatus getStatus() {

@@ -8,7 +8,6 @@ import net.klakegg.pkix.ocsp.builder.Properties;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 
@@ -44,10 +43,7 @@ public class UrlOcspFetcher extends AbstractOcspFetcher {
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/ocsp-request");
         connection.setRequestProperty("Accept", "application/ocsp-response");
-
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(content);
-        }
+        connection.getOutputStream().write(content);
 
         return new UrlOcspFetcherResponse(connection);
     }

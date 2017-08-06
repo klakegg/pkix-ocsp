@@ -1,7 +1,7 @@
 package net.klakegg.pkix.ocsp;
 
-import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.ocsp.CertID;
@@ -9,15 +9,15 @@ import org.bouncycastle.asn1.ocsp.OCSPObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.Extensions;
-import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.ocsp.CertificateID;
 import org.bouncycastle.cert.ocsp.OCSPException;
 import org.bouncycastle.cert.ocsp.OCSPReqBuilder;
 
 import java.io.IOException;
-import java.security.cert.CertificateEncodingException;
+import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -28,7 +28,7 @@ class OcspRequest {
 
     private List<Extension> extensions = new ArrayList<>();
 
-    private X509Certificate[] certificates;
+    private List<BigInteger> certificates = new ArrayList<>();
 
     private ASN1OctetString issuerNameHash;
 
@@ -36,26 +36,11 @@ class OcspRequest {
 
     private AlgorithmIdentifier algorithmIdentifier;
 
-    public void setIssuer(X509Certificate certificate, String digestAlgorithm, String digestOid) throws OcspException {
-        try {
-            // Digest calculator to be used to create values for the issuer certificate.
-            // This is done once in case of multiple requests.
-            OcspDigestOutputStream digestCalculator = new OcspDigestOutputStream(digestAlgorithm, digestOid);
-
-            // Set AlgorithmIdentifier
-            algorithmIdentifier = digestCalculator.getAlgorithmIdentifier();
-
-            // Create an instance of the issuer certificate for use with Bouncy Caste/ASN1.
-           X509CertificateHolder issuerHolder = BCHelper.convertToHolder(certificate);
-
-            // Calculate hashes to identify issuer certificate.
-            issuerNameHash = new DEROctetString(
-                    digestCalculator.calculate(issuerHolder.toASN1Structure().getSubject().getEncoded(ASN1Encoding.DER)));
-            issuerKeyHash = new DEROctetString(
-                    digestCalculator.calculate(issuerHolder.getSubjectPublicKeyInfo().getPublicKeyData().getBytes()));
-        } catch (IOException | CertificateEncodingException e) {
-            throw new OcspException("Exception while preparing issuer data: '%s'", e, e.getMessage());
-        }
+    public void setIssuer(CertificateIssuer certificateIssuer) {
+        this.issuerNameHash = new DEROctetString(certificateIssuer.getIssuerNameHash());
+        this.issuerKeyHash = new DEROctetString(certificateIssuer.getIssuerKeyHash());
+        this.algorithmIdentifier =
+                new AlgorithmIdentifier(new ASN1ObjectIdentifier(certificateIssuer.getAlgorithmIdentifier()));
     }
 
     public void addNonce() {
@@ -68,8 +53,13 @@ class OcspRequest {
         this.extensions.add(extension);
     }
 
-    public void setCertificates(X509Certificate... certificates) {
-        this.certificates = certificates;
+    public void addCertificates(X509Certificate... certificates) {
+        for (X509Certificate certificate : certificates)
+            this.certificates.add(certificate.getSerialNumber());
+    }
+
+    public void addCertificates(BigInteger... serialNumbers) {
+        Collections.addAll(this.certificates, serialNumbers);
     }
 
     protected byte[] generateRequest() throws OcspException {
@@ -79,12 +69,12 @@ class OcspRequest {
 
 
             // Create request for each certificate.
-            for (X509Certificate certificate : certificates) {
+            for (BigInteger certificate : certificates) {
                 reqBuilder.addRequest(new CertificateID((new CertID(
                         algorithmIdentifier,
                         issuerNameHash,
                         issuerKeyHash,
-                        new ASN1Integer(certificate.getSerialNumber())))));
+                        new ASN1Integer(certificate)))));
             }
 
             if (extensions.size() > 0)

@@ -25,6 +25,7 @@ public class BuypassTestOcspTest {
         CertificateResult response = ocspClient.verify(subject, issuer);
 
         Assert.assertEquals(response.getStatus(), CertificateStatus.GOOD);
+        Assert.assertEquals(response.getIssuer(), CertificateIssuer.generate(issuer));
         Assert.assertNotNull(response.getThisUpdate());
         Assert.assertNull(response.getNextUpdate());
     }

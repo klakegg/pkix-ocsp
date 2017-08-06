@@ -1,8 +1,5 @@
 package net.klakegg.pkix.ocsp;
 
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.MessageDigest;
@@ -17,16 +14,9 @@ class OcspDigestOutputStream extends OutputStream {
 
     private MessageDigest messageDigest;
 
-    private ASN1ObjectIdentifier objectIdentifier;
-
-    public OcspDigestOutputStream(String algorithm, String objectIdentifier) {
-        this(algorithm, new ASN1ObjectIdentifier(objectIdentifier));
-    }
-
-    public OcspDigestOutputStream(String algorithm, ASN1ObjectIdentifier objectIdentifier) {
+    public OcspDigestOutputStream(String algorithm) {
         try {
             this.messageDigest = MessageDigest.getInstance(algorithm);
-            this.objectIdentifier = objectIdentifier;
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -35,10 +25,6 @@ class OcspDigestOutputStream extends OutputStream {
     @Override
     public void write(int b) throws IOException {
         messageDigest.update((byte) b);
-    }
-
-    public AlgorithmIdentifier getAlgorithmIdentifier() {
-        return new AlgorithmIdentifier(objectIdentifier);
     }
 
     /**

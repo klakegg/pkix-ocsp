@@ -28,10 +28,6 @@ import java.util.List;
  */
 class AbstractOcspClient {
 
-    public static final Property<String> DIGEST_ALGORITHM = Property.create("SHA-1");
-
-    public static final Property<String> DIGEST_OBJECT_IDENTIFIER = Property.create("1.3.14.3.2.26");
-
     public static final Property<Boolean> EXCEPTION_ON_NO_PATH = Property.create(false);
 
     public static final Property<OcspFetcher> FETCHER = Property.create(UrlOcspFetcher.builder().build());

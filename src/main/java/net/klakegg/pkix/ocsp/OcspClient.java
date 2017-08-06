@@ -56,8 +56,8 @@ public class OcspClient extends AbstractOcspClient {
         }
 
         OcspRequest request = new OcspRequest();
-        request.setIssuer(issuer, properties.get(DIGEST_ALGORITHM), properties.get(DIGEST_OBJECT_IDENTIFIER));
-        request.setCertificates(certificate);
+        request.setIssuer(CertificateIssuer.generate(issuer));
+        request.addCertificates(certificate);
         if (properties.get(NONCE))
             request.addNonce();
 

@@ -62,11 +62,14 @@ class OcspResponse {
         Map<BigInteger, CertificateResult> map = new HashMap<>();
 
         for (SingleResp singleResponse : response.getResponses()) {
-            map.put(singleResponse.getCertID().getSerialNumber(), new CertificateResult(
-                    parseCertificateStatus(singleResponse.getCertStatus()),
-                    singleResponse.getThisUpdate(),
-                    singleResponse.getNextUpdate()
-            ));
+            map.put(singleResponse.getCertID().getSerialNumber(),
+                    new CertificateResult(
+                            parseCertificateStatus(singleResponse.getCertStatus()),
+                            CertificateIssuer.generate(singleResponse.getCertID()),
+                            singleResponse.getThisUpdate(),
+                            singleResponse.getNextUpdate()
+                    )
+            );
         }
 
         return new OcspResult(map);

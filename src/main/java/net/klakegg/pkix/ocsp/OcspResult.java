@@ -10,11 +10,9 @@ import java.util.Map;
  */
 public class OcspResult {
 
-    private final Map<BigInteger, CertificateResult> map;
+    protected static final OcspResult EMPTY = new OcspResult(Collections.<BigInteger, CertificateResult>emptyMap());
 
-    protected static OcspResult empty() {
-        return new OcspResult(Collections.<BigInteger, CertificateResult>emptyMap());
-    }
+    private final Map<BigInteger, CertificateResult> map;
 
     protected OcspResult(Map<BigInteger, CertificateResult> map) {
         this.map = Collections.unmodifiableMap(map);

@@ -7,7 +7,6 @@ import net.klakegg.pkix.ocsp.builder.Properties;
 import java.math.BigInteger;
 import java.net.URI;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
 
 /**
  * Implementation of OCSP client supporting verification of multiple certificates at once using multiple requests in
@@ -40,9 +39,16 @@ public class OcspMultiClient extends AbstractOcspClient {
 
     public OcspResult verify(X509Certificate... certificates) throws OcspException {
         if (certificates.length == 0)
-            return new OcspResult(Collections.<BigInteger, CertificateResult>emptyMap());
+            return OcspResult.EMPTY;
 
         X509Certificate issuer = findIntermediate(certificates[0]);
+
+        return verify(CertificateIssuer.generate(issuer), certificates);
+    }
+
+    public OcspResult verify(CertificateIssuer issuer, X509Certificate... certificates) throws OcspException {
+        if (certificates.length == 0)
+            return OcspResult.EMPTY;
 
         URI uri = properties.get(OVERRIDE_URL);
 
@@ -51,12 +57,20 @@ public class OcspMultiClient extends AbstractOcspClient {
 
             // In case no URI was detected.
             if (uri == null)
-                return OcspResult.empty();
+                return OcspResult.EMPTY;
         }
 
+        BigInteger[] serialNumbers = new BigInteger[certificates.length];
+        for (int i = 0; i < certificates.length; i++)
+            serialNumbers[i] = certificates[i].getSerialNumber();
+
+        return verify(uri, issuer, serialNumbers);
+    }
+
+    public OcspResult verify(URI uri, CertificateIssuer issuer, BigInteger... serialNumbers) throws OcspException {
         OcspRequest request = new OcspRequest();
-        request.setIssuer(issuer, properties.get(DIGEST_ALGORITHM), properties.get(DIGEST_OBJECT_IDENTIFIER));
-        request.setCertificates(certificates);
+        request.setIssuer(issuer);
+        request.addCertificates(serialNumbers);
         if (properties.get(NONCE))
             request.addNonce();
 

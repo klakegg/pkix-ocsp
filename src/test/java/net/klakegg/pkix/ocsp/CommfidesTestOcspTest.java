@@ -43,6 +43,7 @@ public class CommfidesTestOcspTest {
         CertificateResult response = ocspClient.verify(subjectValid, issuer);
 
         Assert.assertEquals(response.getStatus(), CertificateStatus.GOOD);
+        Assert.assertEquals(response.getIssuer(), CertificateIssuer.generate(issuer));
         Assert.assertNotNull(response.getThisUpdate());
         Assert.assertNull(response.getNextUpdate());
 
