@@ -1,5 +1,6 @@
-package net.klakegg.pkix.ocsp;
+package net.klakegg.pkix.ocsp.issuer;
 
+import net.klakegg.pkix.ocsp.*;
 import net.klakegg.pkix.ocsp.util.CertificateHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;

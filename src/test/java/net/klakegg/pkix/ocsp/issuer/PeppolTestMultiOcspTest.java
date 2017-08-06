@@ -1,5 +1,9 @@
-package net.klakegg.pkix.ocsp;
+package net.klakegg.pkix.ocsp.issuer;
 
+import net.klakegg.pkix.ocsp.CertificateStatus;
+import net.klakegg.pkix.ocsp.OcspException;
+import net.klakegg.pkix.ocsp.OcspMultiClient;
+import net.klakegg.pkix.ocsp.OcspResult;
 import net.klakegg.pkix.ocsp.util.CertificateHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
