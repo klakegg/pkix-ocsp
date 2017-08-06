@@ -109,7 +109,7 @@ class AbstractOcspClient {
                 throw new OcspException("Response was of type '%s'.", response.getContentType());
 
             try (InputStream inputStream = response.getContent()) {
-                return OcspResponse.parse(inputStream);
+                return OcspResponse.parse(uri, inputStream);
             }
         } catch (IOException e) {
             throw new OcspException(e.getMessage(), e);

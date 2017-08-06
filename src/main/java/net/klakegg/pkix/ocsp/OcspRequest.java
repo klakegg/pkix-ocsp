@@ -15,7 +15,6 @@ import org.bouncycastle.cert.ocsp.OCSPReqBuilder;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,11 +50,6 @@ class OcspRequest {
 
     public void addExtension(Extension extension) {
         this.extensions.add(extension);
-    }
-
-    public void addCertificates(X509Certificate... certificates) {
-        for (X509Certificate certificate : certificates)
-            this.certificates.add(certificate.getSerialNumber());
     }
 
     public void addCertificates(BigInteger... serialNumbers) {

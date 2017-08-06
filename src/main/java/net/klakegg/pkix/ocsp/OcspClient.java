@@ -5,6 +5,7 @@ import net.klakegg.pkix.ocsp.builder.Builder;
 import net.klakegg.pkix.ocsp.builder.Properties;
 import net.klakegg.pkix.ocsp.builder.Property;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 
@@ -45,6 +46,10 @@ public class OcspClient extends AbstractOcspClient {
     }
 
     public CertificateResult verify(X509Certificate certificate, X509Certificate issuer) throws OcspException {
+        return verify(CertificateIssuer.generate(issuer), certificate);
+    }
+
+    public CertificateResult verify(CertificateIssuer issuer, X509Certificate certificate) throws OcspException {
         URI uri = properties.get(OVERRIDE_URL);
 
         if (uri == null) {
@@ -55,16 +60,20 @@ public class OcspClient extends AbstractOcspClient {
                 return new CertificateResult(CertificateStatus.UNKNOWN);
         }
 
+        return verify(uri, issuer, certificate.getSerialNumber());
+    }
+
+    public CertificateResult verify(URI uri, CertificateIssuer issuer, BigInteger serialNumber) throws OcspException {
         OcspRequest request = new OcspRequest();
-        request.setIssuer(CertificateIssuer.generate(issuer));
-        request.addCertificates(certificate);
+        request.setIssuer(issuer);
+        request.addCertificates(serialNumber);
         if (properties.get(NONCE))
             request.addNonce();
 
         OcspResponse response = fetch(request, uri);
         response.verifyResponse();
 
-        CertificateResult certificateResult = response.getResult().get(certificate);
+        CertificateResult certificateResult = response.getResult().get(serialNumber);
 
         switch (certificateResult.getStatus()) {
             case REVOKED:

@@ -5,6 +5,7 @@ import net.klakegg.pkix.ocsp.util.CertificateHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.net.URI;
 import java.security.cert.X509Certificate;
 
 /**
@@ -45,6 +46,7 @@ public class CommfidesTestOcspTest {
 
         Assert.assertEquals(response.getStatus(), CertificateStatus.GOOD);
         Assert.assertEquals(response.getIssuer(), CertificateIssuer.generate(issuer));
+        Assert.assertEquals(response.getUri(), URI.create("http://ocsp1.test.commfides.com/ocsp"));
         Assert.assertNotNull(response.getThisUpdate());
         Assert.assertNull(response.getNextUpdate());
 

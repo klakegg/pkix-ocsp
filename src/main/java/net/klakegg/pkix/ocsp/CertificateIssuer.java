@@ -46,7 +46,7 @@ public class CertificateIssuer implements Serializable {
         return new CertificateIssuer(certificateID.getIssuerNameHash(), certificateID.getIssuerKeyHash());
     }
 
-    public CertificateIssuer(byte[] issuerNameHash, byte[] issuerKeyHash) {
+    private CertificateIssuer(byte[] issuerNameHash, byte[] issuerKeyHash) {
         this.issuerNameHash = issuerNameHash;
         this.issuerKeyHash = issuerKeyHash;
     }
@@ -64,6 +64,7 @@ public class CertificateIssuer implements Serializable {
     }
 
     @Override
+    @SuppressWarnings("SimplifiableIfStatement")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

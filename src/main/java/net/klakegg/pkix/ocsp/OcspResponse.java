@@ -6,6 +6,7 @@ import org.bouncycastle.cert.ocsp.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,13 +15,16 @@ import java.util.Map;
  */
 class OcspResponse {
 
-    private OCSPResp ocspResp;
+    private final URI uri;
 
-    public static OcspResponse parse(InputStream inputStream) throws IOException {
-        return new OcspResponse(new OCSPResp(IOHelper.toByteArray(inputStream)));
+    private final OCSPResp ocspResp;
+
+    public static OcspResponse parse(URI uri, InputStream inputStream) throws IOException {
+        return new OcspResponse(uri, new OCSPResp(IOHelper.toByteArray(inputStream)));
     }
 
-    private OcspResponse(OCSPResp ocspResp) {
+    private OcspResponse(URI uri, OCSPResp ocspResp) {
+        this.uri = uri;
         this.ocspResp = ocspResp;
     }
 
@@ -66,6 +70,7 @@ class OcspResponse {
                     new CertificateResult(
                             parseCertificateStatus(singleResponse.getCertStatus()),
                             CertificateIssuer.generate(singleResponse.getCertID()),
+                            uri,
                             singleResponse.getThisUpdate(),
                             singleResponse.getNextUpdate()
                     )

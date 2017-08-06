@@ -1,6 +1,7 @@
 package net.klakegg.pkix.ocsp;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Date;
 
 /**
@@ -12,22 +13,21 @@ public class CertificateResult implements Serializable {
 
     private CertificateIssuer issuer;
 
+    private URI uri;
+
     private CertificateStatus status;
 
     private Date thisUpdate;
 
     private Date nextUpdate;
 
-    protected CertificateResult(CertificateStatus certificateStatus, CertificateIssuer issuer,
+    protected CertificateResult(CertificateStatus certificateStatus, CertificateIssuer issuer, URI uri,
                                 Date thisUpdate, Date nextUpdate) {
         this(certificateStatus);
         this.issuer = issuer;
+        this.uri = uri;
         this.thisUpdate = thisUpdate;
         this.nextUpdate = nextUpdate;
-    }
-
-    public CertificateIssuer getIssuer() {
-        return issuer;
     }
 
     protected CertificateResult(CertificateStatus certificateStatus) {
@@ -36,6 +36,14 @@ public class CertificateResult implements Serializable {
 
     public CertificateStatus getStatus() {
         return status;
+    }
+
+    public CertificateIssuer getIssuer() {
+        return issuer;
+    }
+
+    public URI getUri() {
+        return uri;
     }
 
     public Date getThisUpdate() {
