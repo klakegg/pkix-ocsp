@@ -46,7 +46,7 @@ public class CertificateIssuer implements Serializable {
         return new CertificateIssuer(certificateID.getIssuerNameHash(), certificateID.getIssuerKeyHash());
     }
 
-    private CertificateIssuer(byte[] issuerNameHash, byte[] issuerKeyHash) {
+    public CertificateIssuer(byte[] issuerNameHash, byte[] issuerKeyHash) {
         this.issuerNameHash = issuerNameHash;
         this.issuerKeyHash = issuerKeyHash;
     }

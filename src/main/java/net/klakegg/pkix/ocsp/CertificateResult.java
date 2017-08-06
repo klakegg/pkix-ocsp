@@ -1,6 +1,7 @@
 package net.klakegg.pkix.ocsp;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.Date;
 
@@ -15,6 +16,8 @@ public class CertificateResult implements Serializable {
 
     private URI uri;
 
+    private BigInteger serialNumber;
+
     private CertificateStatus status;
 
     private Date thisUpdate;
@@ -22,10 +25,11 @@ public class CertificateResult implements Serializable {
     private Date nextUpdate;
 
     protected CertificateResult(CertificateStatus certificateStatus, CertificateIssuer issuer, URI uri,
-                                Date thisUpdate, Date nextUpdate) {
+                                BigInteger serialNumber, Date thisUpdate, Date nextUpdate) {
         this(certificateStatus);
         this.issuer = issuer;
         this.uri = uri;
+        this.serialNumber = serialNumber;
         this.thisUpdate = thisUpdate;
         this.nextUpdate = nextUpdate;
     }
@@ -44,6 +48,10 @@ public class CertificateResult implements Serializable {
 
     public URI getUri() {
         return uri;
+    }
+
+    public BigInteger getSerialNumber() {
+        return serialNumber;
     }
 
     public Date getThisUpdate() {

@@ -71,6 +71,7 @@ class OcspResponse {
                             parseCertificateStatus(singleResponse.getCertStatus()),
                             CertificateIssuer.generate(singleResponse.getCertID()),
                             uri,
+                            singleResponse.getCertID().getSerialNumber(),
                             singleResponse.getThisUpdate(),
                             singleResponse.getNextUpdate()
                     )
