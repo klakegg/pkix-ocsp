@@ -103,16 +103,16 @@ class AbstractOcspClient {
     protected OcspResponse fetch(OcspRequest ocspReq, URI uri) throws OcspException {
         try (OcspFetcherResponse response = properties.get(FETCHER).fetch(uri, ocspReq.generateRequest())) {
             if (response.getStatus() != 200)
-                throw new OcspException("Received HTTP code '%s' from responder.", response.getStatus());
+                throw new OcspServerException("Received HTTP code '%s' from responder.", response.getStatus());
 
             if (!response.getContentType().equalsIgnoreCase("application/ocsp-response"))
-                throw new OcspException("Response was of type '%s'.", response.getContentType());
+                throw new OcspServerException("Response was of type '%s'.", response.getContentType());
 
             try (InputStream inputStream = response.getContent()) {
                 return OcspResponse.parse(uri, inputStream);
             }
         } catch (IOException e) {
-            throw new OcspException(e.getMessage(), e);
+            throw new OcspServerException(e.getMessage(), e);
         }
     }
 }

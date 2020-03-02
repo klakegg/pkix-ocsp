@@ -25,7 +25,7 @@ public class PeppolTestMultiOcspTest {
     private X509Certificate issuer =
             CertificateHelper.parse(getClass().getResourceAsStream("/peppol-ap-test/issuer.cer"));
 
-    @Test
+    @Test(enabled = false)
     public void simple() throws OcspException {
         OcspMultiClient ocspMultiClient = OcspMultiClient.builder()
                 .set(OcspMultiClient.INTERMEDIATES, Collections.singletonList(issuer))

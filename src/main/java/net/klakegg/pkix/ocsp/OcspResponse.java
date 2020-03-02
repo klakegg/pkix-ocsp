@@ -33,17 +33,17 @@ class OcspResponse {
             case OCSPResponseStatus.SUCCESSFUL:
                 break;
             case OCSPResponseStatus.MALFORMED_REQUEST:
-                throw new OcspException("Request was malformed.");
+                throw new OcspServerException("Request was malformed.");
             case OCSPResponseStatus.INTERNAL_ERROR:
-                throw new OcspException("An internal error occurred in the OCSP Server.");
+                throw new OcspServerException("An internal error occurred in the OCSP Server.");
             case OCSPResponseStatus.TRY_LATER:
-                throw new OcspException("OCSP server is currently too busy.");
+                throw new OcspServerException("OCSP server is currently too busy.");
             case OCSPResponseStatus.SIG_REQUIRED:
-                throw new OcspException("Signed request is required for this OCSP Server.");
+                throw new OcspServerException("Signed request is required for this OCSP Server.");
             case OCSPResponseStatus.UNAUTHORIZED:
-                throw new OcspException("Your signature was not authorized by the OCSP Server.");
+                throw new OcspServerException("Your signature was not authorized by the OCSP Server.");
             default:
-                throw new OcspException("Unknown OCSPResponse status code '%s'.", ocspResp.getStatus());
+                throw new OcspServerException("Unknown OCSPResponse status code '%s'.", ocspResp.getStatus());
         }
     }
 

@@ -20,7 +20,7 @@ public class BuypassTestOcspTest {
     private X509Certificate issuer =
             CertificateHelper.parse(getClass().getResourceAsStream("/buypass-test/issuer.cer"));
 
-    @Test
+    @Test(enabled = false)
     public void simple() throws OcspException {
         OcspClient ocspClient = OcspClient.builder()
                 .build();

@@ -24,7 +24,7 @@ public class PeppolTestOcspTest {
     private X509Certificate issuer =
             CertificateHelper.parse(getClass().getResourceAsStream("/peppol-ap-test/issuer.cer"));
 
-    @Test
+    @Test(enabled = false)
     public void simple() throws OcspException {
         OcspClient ocspClient = OcspClient.builder()
                 .build();
@@ -32,7 +32,7 @@ public class PeppolTestOcspTest {
         Assert.assertEquals(ocspClient.verify(subjectValid, issuer).getStatus(), CertificateStatus.GOOD);
     }
 
-    @Test
+    @Test(enabled = false)
     public void providedIssuers() throws OcspException {
         OcspClient ocspClient = OcspClient.builder()
                 .set(OcspClient.INTERMEDIATES, Collections.singletonList(issuer))
@@ -41,7 +41,7 @@ public class PeppolTestOcspTest {
         Assert.assertEquals(ocspClient.verify(subjectValid).getStatus(), CertificateStatus.GOOD);
     }
 
-    @Test
+    @Test(enabled = false)
     public void expiredCertificate() throws OcspException {
         OcspClient ocspClient = OcspClient.builder()
                 .set(OcspClient.EXCEPTION_ON_UNKNOWN, false)
