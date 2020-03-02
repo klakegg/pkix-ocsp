@@ -4,7 +4,7 @@
 
     <groupId>net.klakegg.pkix</groupId>
     <artifactId>pkix-ocsp</artifactId>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.1</version>
 
     <name>PKIX :: OCSP Client</name>
     <description>Configurable OCSP client.</description>
@@ -16,7 +16,7 @@
     </properties>
 
     <scm>
-        <tag>HEAD</tag>
+        <tag>pkix-ocsp-0.9.1</tag>
         <url>https://github.com/klakegg/pkix-ocsp</url>
         <connection>scm:git:https://github.com/klakegg/pkix-ocsp.git</connection>
         <developerConnection>scm:git:git@github.com:klakegg/pkix-ocsp.git</developerConnection>
