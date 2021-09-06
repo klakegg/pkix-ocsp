@@ -5,13 +5,13 @@ import net.klakegg.pkix.ocsp.api.OcspFetcherResponse;
 import net.klakegg.pkix.ocsp.builder.Properties;
 import net.klakegg.pkix.ocsp.builder.Property;
 import net.klakegg.pkix.ocsp.fetcher.UrlOcspFetcher;
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.X509ObjectIdentifiers;
-import org.bouncycastle.x509.extension.X509ExtensionUtil;
+import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,15 +78,15 @@ class AbstractOcspClient {
         }
 
         try {
-            ASN1Sequence asn1Seq = (ASN1Sequence) X509ExtensionUtil.fromExtensionValue(extensionValue);
+            ASN1Sequence asn1Seq = (ASN1Sequence) JcaX509ExtensionUtils.parseExtensionValue(extensionValue);
             Enumeration<?> objects = asn1Seq.getObjects();
 
             while (objects.hasMoreElements()) {
                 ASN1Sequence obj = (ASN1Sequence) objects.nextElement();
                 if (obj.getObjectAt(0).equals(X509ObjectIdentifiers.id_ad_ocsp)) {
-                    DERTaggedObject location = (DERTaggedObject) obj.getObjectAt(1);
+                    ASN1TaggedObject location = (ASN1TaggedObject) obj.getObjectAt(1);
                     if (location.getTagNo() == GeneralName.uniformResourceIdentifier) {
-                        DEROctetString uri = (DEROctetString) location.getObject();
+                        ASN1OctetString uri = (ASN1OctetString) location.getObject();
                         return URI.create(new String(uri.getOctets()));
                     }
                 }
